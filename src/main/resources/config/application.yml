@@ -1,0 +1,63 @@
+#server:
+#  servlet:
+##    context-path: /demo
+#    session:
+#      # session 过期时间
+#      timeout: 3600s
+#    encoding:
+#      charset: utf-8
+#  tomcat:
+#    uri-encoding: UTF-8
+#spring:
+#  profiles:
+#    active: test
+#  servlet:
+#    # 上传文件配置
+#    multipart:
+#      max-file-size: 300MB
+#      max-request-size: 500MB
+#      enabled: true
+#  # 配置i18n文件地址
+#  messages:
+#    basename: i18n/messages
+#  # 热部署配置
+#  devtools:
+#    restart:
+#      enabled: true
+#      additional-paths:
+#      exclude:
+#  # freemarker 做代码自动生成
+#  freemarker:
+#    # 设置模板后缀名
+#    suffix: .ftl
+#    # 设置文档类型
+#    content-type: text/html
+#    # 设置页面编码格式
+#    charset: UTF-8
+#    # 设置页面缓存
+#    cache: false
+#    # 设置ftl文件路径
+#    template-loader-path: ["classpath:/ftl"]
+#    prefer-file-system-access: false
+#
+##mybatis:
+##  # xml文件地址映射
+##  mapper-locations: classpath*:com/bonjour/**/mapper/*.xml
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印mybatis sql日志
+#  mapper-locations: classpath*:com/bonjour/demo/**/mapper/*
+#
+#
+## 日志级别配置
+##logging:
+##  level:
+##    com:
+##      louddt:
+##        cq:
+##          financial: debug
+##    org:
+##      mybatis: debug
+##      springframework:
+##        web: debug
+##        transaction: debug
