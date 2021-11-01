@@ -20,6 +20,7 @@ import java.util.Date;
 public class Address implements Serializable {
 
     @TableId("id")
+    @ApiModelProperty("主键")
     private String id;
 
     // 用户id
@@ -28,23 +29,37 @@ public class Address implements Serializable {
     private String userId;
 
     // 所在地
+    @TableField("location")
+    @ApiModelProperty("所在地")
     private String location;
 
     // 地址
+    @TableField("address")
+    @ApiModelProperty("地址")
     private String address;
 
     // 收货人
+    @TableField("consignee")
+    @ApiModelProperty("收货人")
     private String consignee;
 
     // 收货人电话
+    @TableField("phone")
+    @ApiModelProperty("收货人电话")
     private String phone;
 
     // 标签 家 公司 学校
+    @TableField("tags")
+    @ApiModelProperty("标签 0家 1公司 2学校")
     private String tags;
 
     // 是否默认 默认 否
+    @TableField("is_default")
+    @ApiModelProperty("是否默认 默认 0否 1是")
     private String isDefault;
 
     // 添加时间
+    @TableField("add_time")
+    @ApiModelProperty("添加时间")
     private Date addTime;
 }

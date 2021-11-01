@@ -1,6 +1,9 @@
 package com.bonjour.demo.test.common.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,10 +14,13 @@ import java.util.Date;
  * @date 2021/9/27 14:51
  */
 @Data
+@ApiModel("订单信息表")
 @TableName("record")
 public class Order {
 
     // 主键
+    @TableId("id")
+    @ApiModelProperty("主键")
     private String id;
 
     private String userId;
