@@ -30,7 +30,7 @@ public class ShoppingCartGoods implements Serializable {
     private String goodsTypeName;
 
     // 库存
-    private String stock;
+    private int stock;
 
     // 数量
     private Integer number;

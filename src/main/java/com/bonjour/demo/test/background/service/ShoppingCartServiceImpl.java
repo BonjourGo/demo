@@ -70,6 +70,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService{
 
     @Override
     public ShoppingCartVO getShoppingCartGoods(String userId) {
-        return null;
+        List<ShoppingCartGoods> preGoodsList = (List<ShoppingCartGoods>) redisUtils.getCacheObject(userId);
+        List<String> idList = new ArrayList<>();
+        for (ShoppingCartGoods shoppingCartGoods : preGoodsList) {
+            idList.add(shoppingCartGoods.getGoodsTypeId().toString());
+        }
+        List<ShoppingCartGoods> finalList = goodsMapper.getList(idList);
+        ShoppingCartVO shoppingCartVO = new ShoppingCartVO();
+        shoppingCartVO.setList(finalList);
+        return shoppingCartVO;
     }
 }
