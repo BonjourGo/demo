@@ -3,6 +3,7 @@ package com.bonjour.demo.test.background.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.bonjour.demo.test.background.mapper.UserMapper;
 import com.bonjour.demo.test.common.entity.User;
+import com.bonjour.demo.test.common.utils.AESUtils;
 import com.bonjour.demo.test.common.utils.RedisUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,9 @@ public class LoginServiceImpl implements LoginService{
         if (StringUtils.isBlank(user.getPhone()) || StringUtils.isBlank(user.getPassword())) {
             throw new RuntimeException("请输入账号或密码！");
         }
+
         LambdaQueryWrapper<User> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(User::getPhone, user.getPhone()).eq(User::getPassword, user.getPassword());
+        lambdaQueryWrapper.eq(User::getPhone, user.getPhone()).eq(User::getPassword, AESUtils.encrypt(user.getPassword()));
         User login = userMapper.selectOne(lambdaQueryWrapper);
         if (login == null) {
             throw new RuntimeException("账号或密码错误！");

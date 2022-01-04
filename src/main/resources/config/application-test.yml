@@ -33,7 +33,12 @@
 #      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
 ##        合并多个DruidDataSource的监控数据
 #      useGlobalDataSourceStat: true
-##  datasource:
+#    data:
+#      elasticsearch:
+#        cluster-name: my-application # 对应es.yml里的cluster.name
+#        cluster-nodes: 127.0.0.1:9300
+#        repositories:
+#          enabled: true
 ##    dynamic:
 ##      primary: fincialPostgre #设置默认的数据源或者数据源组,默认值即为master
 ##      datasource:

@@ -1,9 +1,9 @@
 package com.bonjour.demo.test.common;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.bonjour.demo.test.common.utils.AESUtils;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @authur tc
@@ -125,29 +125,43 @@ public class Test {
      * @param args
      */
 
-    public static void main(String[] args) {
-        int[] nums = {};
-//        int[] nums = {-4,-2,1,-5,-4,-4,4,-2,0,4,0,-2,3,1,-5,0};
-//        int[] nums = {3,0,-2,-1,1,2};
-        int num = 123;
-        // [[-2,-1,3],[-2,0,2],[-1,0,1]]
-        List<Integer> list = new ArrayList<>();
-        list.add(-4);
-        list.add(0);
-        list.add(4);
-        List<Integer> list1 = new ArrayList<>();
-        list1.add(0);
-        list1.add(0);
-        list1.add(0);
-//        System.out.println(list1.containsAll(list));
-//        System.out.println(threeNums(nums));
+//    public static void main(String[] args) {
+//        int[] nums = {};
+////        int[] nums = {-4,-2,1,-5,-4,-4,4,-2,0,4,0,-2,3,1,-5,0};
+////        int[] nums = {3,0,-2,-1,1,2};
+//        int num = 123;
+//        // [[-2,-1,3],[-2,0,2],[-1,0,1]]
+//        List<Integer> list = new ArrayList<>();
+//        list.add(-4);
+//        list.add(0);
+//        list.add(4);
+//        List<Integer> list1 = new ArrayList<>();
+//        list1.add(0);
+//        list1.add(0);
+//        list1.add(0);
+////        System.out.println(list1.containsAll(list));
+////        System.out.println(threeNums(nums));
+//
+//        String s = "234";
+//        char[] chars = s.toCharArray();
+//        for (int i = 0; i < chars.length; i++) {
+//            System.out.println(chars[i]);
+//        }
+//        System.out.println(chars);
+//    }
 
-        String s = "234";
-        char[] chars = s.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            System.out.println(chars[i]);
-        }
-        System.out.println(chars);
+    public static int add(int i) {
+        return i++;
     }
 
+    public static void main(String[] args) {
+//        String s = AESUtils.encrypt("password");
+//        System.out.println(s);
+//        String o = AESUtils.decrypt(s);
+//        System.out.println(o);
+        // 20211211140324
+        String s = "20211211140324";
+        String data = s.substring(0, 4) + "年" + s.substring(4, 6) + "月" + s.substring(6, 8) + "日";
+        System.out.println(data);
+    }
 }

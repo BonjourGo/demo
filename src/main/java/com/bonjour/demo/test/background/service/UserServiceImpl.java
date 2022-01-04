@@ -5,17 +5,22 @@ import com.bonjour.demo.test.background.mapper.AddressMapper;
 import com.bonjour.demo.test.background.mapper.UserMapper;
 import com.bonjour.demo.test.common.entity.Address;
 import com.bonjour.demo.test.common.entity.User;
+import com.bonjour.demo.test.common.utils.AESUtils;
 import com.bonjour.demo.test.common.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @authur tc
  * @date 2021/10/12 10:18
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -42,8 +47,19 @@ public class UserServiceImpl implements UserService {
         if (userMapper.selectCount(lambdaQueryWrapper) > 0) {
             throw new RuntimeException("该手机号已注册！");
         }
-        user.setId(redisUtils.getIncrId("user_id"));
+        log.info("=========================" + String.valueOf(System.nanoTime()));
+        user.setRegisterTime(new Date());
+        redisUtils.setCacheObjectAndExpire(user.getPhone(), user.getPhone(), 5, TimeUnit.SECONDS);
+        user.setPassword(AESUtils.encrypt(user.getPassword()));
+        String id = redisUtils.getIncrId("user_id");
+        user.setId(id);
+        log.info(id + user.getRegisterTime());
         user.setLogStatus("0");
+        LambdaQueryWrapper<User> lambdaQueryWrapper1 = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper1.eq(User::getPhone, user.getPhone());
+        if (userMapper.selectCount(lambdaQueryWrapper1) > 0) {
+            throw new RuntimeException("请勿重复点击！");
+        }
         userMapper.insert(user);
     }
 

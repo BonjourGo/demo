@@ -1,6 +1,7 @@
 package com.bonjour.demo.test.background.controller;
 
 import com.bonjour.demo.test.background.service.GoodsmanageService;
+import com.bonjour.demo.test.common.entity.Goods;
 import com.bonjour.demo.test.common.utils.Result;
 import com.bonjour.demo.test.common.vo.GoodsVO;
 import io.swagger.annotations.Api;
@@ -27,6 +28,13 @@ public class GoodsmanageController {
     @PostMapping("/addGoods")
     public Result addGoods(@RequestBody GoodsVO goodsVO) {
         String msg = goodsmanageService.addGoods(goodsVO);
+        return Result.ok(msg);
+    }
+
+    @ApiOperation("添加商品")
+    @PostMapping("/add")
+    public Result add(@RequestBody Goods goods) {
+        String msg = goodsmanageService.add(goods);
         return Result.ok(msg);
     }
 }

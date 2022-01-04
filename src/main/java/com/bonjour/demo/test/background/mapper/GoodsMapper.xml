@@ -17,4 +17,20 @@
             #{item}
         </foreach>
     </select>
+
+    <insert id="insertList">
+        insert into goods(id, shop_id, shop_name, name, description, add_time, is_shelf, type) values
+        <foreach collection="list"  separator="," item="item" index="i">
+            (
+            #{item.id},
+            #{item.shopId},
+            #{item.shopName},
+            #{item.name},
+            #{item.description},
+            #{item.addTime},
+            #{item.isShelf},
+            #{item.type}
+            )
+        </foreach>
+    </insert>
 </mapper>

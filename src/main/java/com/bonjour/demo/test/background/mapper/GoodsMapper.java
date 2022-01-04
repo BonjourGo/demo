@@ -22,4 +22,6 @@ public interface GoodsMapper extends BaseMapper<Goods> {
      * @return
      */
     List<ShoppingCartGoods> getList(@Param("idList") List<String> idList);
+
+    void insertList(@Param("list") List<Goods> list);
 }

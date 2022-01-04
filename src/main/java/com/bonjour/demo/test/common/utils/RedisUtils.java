@@ -1,14 +1,21 @@
 package com.bonjour.demo.test.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -16,11 +23,104 @@ import java.util.concurrent.TimeUnit;
  * @authur tc
  * @date 2021/9/27 15:58
  */
+@Slf4j
 @Component
 public class RedisUtils {
 
+    private static final String LOCK_SUCCESS = "OK";
+    private static final String SET_IF_NOT_EXIST = "NX";
+    private static final String SET_WITH_EXPIRE_TIME = "PX";
+    private static final Long RELEASE_SUCCESS = 1L;
+
     @Autowired
-    private RedisTemplate redisTemplate;
+    private static RedisTemplate redisTemplate;
+
+    @Autowired
+    private JedisPool jedisPool;
+
+    /**
+     * 尝试获取分布式锁
+     * @param jedis Redis客户端
+     * @param lockKey 锁
+     * @param requestId 请求标识
+     * @param expireTime 超期时间
+     * @return 是否获取成功
+     */
+    public boolean tryGetDistributedLock(Jedis jedis, String lockKey, String requestId, int expireTime) {
+
+        String result = jedis.set(lockKey, requestId, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime);
+
+        if (LOCK_SUCCESS.equals(result)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 释放分布式锁
+     * @param jedis Redis客户端
+     * @param lockKey 锁
+     * @param requestId 请求标识
+     * @return 是否释放成功
+     */
+    public boolean releaseDistributedLock(Jedis jedis, String lockKey, String requestId) {
+
+        String script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+        Object result = jedis.eval(script, Collections.singletonList(lockKey), Collections.singletonList(requestId));
+
+        if (RELEASE_SUCCESS.equals(result)) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * 加锁
+     * @param key
+     * @param value
+     * @return
+     */
+    public static boolean setNx(String key, String value) {
+        Object object = null;
+        try {
+            object = redisTemplate.execute(new RedisCallback<Object>() {
+                @Override
+                public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+                    JdkSerializationRedisSerializer serializer = new JdkSerializationRedisSerializer();
+                    Boolean success = connection.setNX(serializer.serialize(key), serializer.serialize(value));
+                    connection.close();
+                    return success;
+                }
+            });
+        } catch (Exception e) {
+            log.error("Redis 加锁失败 ：", e.toString());
+        }
+        return object != null ? (boolean) object : false;
+    }
+
+    /**
+     * 释放锁
+     * @param key
+     * @return
+     */
+    public static boolean removeNx(String key) {
+        Object object = null;
+        try {
+            object = redisTemplate.execute(new RedisCallback<Object>() {
+                @Override
+                public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+                    JdkSerializationRedisSerializer serializer = new JdkSerializationRedisSerializer();
+                    Boolean success = connection.del(serializer.serialize(key)).longValue() > 0 ? true : false;
+                    connection.close();
+                    return success;
+                }
+            });
+        } catch (Exception e) {
+            log.error("Redis 释放锁失败 ：", e.toString());
+        }
+        return object != null ? (boolean) object : false;
+    }
 
     /**
      *  redis 获得自增id 有前缀
@@ -33,11 +133,11 @@ public class RedisUtils {
         Date date = new Date();
         String formatDate = simpleDateFormat.format(date);
         // 获取自增
-        RedisAtomicLong redisAtomicLong = new RedisAtomicLong(formatDate, redisTemplate.getConnectionFactory());
-        Long incr = redisAtomicLong.incrementAndGet();
+//        RedisAtomicLong redisAtomicLong = new RedisAtomicLong(formatDate, redisTemplate.getConnectionFactory());
+//        Long incr = redisAtomicLong.incrementAndGet();
         // 自增起始号码
         DecimalFormat decimalFormat = new DecimalFormat("0000000000");
-        String value = decimalFormat.format(incr);
+        String value = decimalFormat.format(123654);
         String id = keyPrefix + formatDate + value;
         return id;
     }

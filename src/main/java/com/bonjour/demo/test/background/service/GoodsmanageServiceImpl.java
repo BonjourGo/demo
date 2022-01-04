@@ -1,5 +1,6 @@
 package com.bonjour.demo.test.background.service;
 
+import com.baomidou.mybatisplus.extension.service.additional.query.impl.QueryChainWrapper;
 import com.bonjour.demo.test.background.mapper.GoodsMapper;
 import com.bonjour.demo.test.common.entity.Goods;
 import com.bonjour.demo.test.common.utils.RedisUtils;
@@ -30,6 +31,13 @@ public class GoodsmanageServiceImpl implements GoodsmanageService{
         Long goodsId = redisUtils.getIncrLongId("goodsId");
         goods.setId(goodsId);
         goods.setAddTime(new Date());
+        goodsMapper.insert(goods);
+        return "添加成功";
+    }
+
+    @Override
+    public String add(Goods goods) {
+        goods.setId(redisUtils.getIncrLongId("goodsId"));
         goodsMapper.insert(goods);
         return "添加成功";
     }

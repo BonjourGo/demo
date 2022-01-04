@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author 唐超
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @Data
 @TableName("user")
 @ApiModel("用户表")
-public class User implements Serializable {
+public class User {
 
     @TableId("id")
     @ApiModelProperty("主键")
@@ -36,6 +37,10 @@ public class User implements Serializable {
     @TableField("log_status")
     @ApiModelProperty("登录状态 0 未登录 1 已登录")
     private String logStatus;
+
+    @TableField("register_time")
+    @ApiModelProperty("注册时间")
+    private Date registerTime;
 
 //    private String sex;
 }

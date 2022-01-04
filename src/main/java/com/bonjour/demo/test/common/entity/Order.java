@@ -1,5 +1,6 @@
 package com.bonjour.demo.test.common.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
@@ -18,27 +19,32 @@ import java.util.Date;
 @TableName("record")
 public class Order {
 
-    // 主键
     @TableId("id")
     @ApiModelProperty("主键")
     private String id;
 
+    @TableField("user_id")
+    @ApiModelProperty("用户id")
     private String userId;
 
-    private String ticketId;
+    @TableField("goods_id")
+    @ApiModelProperty("商品id")
+    private String goodsId;
 
+    @TableField("create_time")
+    @ApiModelProperty("创建时间")
     private Date createTime;
 
-    // 数量
-    private Integer number;
-
-    // 价格
+    @TableField("total_price")
+    @ApiModelProperty("价格")
     private BigDecimal totalPrice;
 
-    // 地址
+    @TableField("address")
+    @ApiModelProperty("地址")
     private String address;
 
-    // 收货人
+    @TableField("goods_id")
+    @ApiModelProperty("商品id")
     private String consignee;
 
     // 收货人电话
